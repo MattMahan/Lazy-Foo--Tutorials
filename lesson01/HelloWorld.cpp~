@@ -1,6 +1,6 @@
 // SDL Lesson 01
 // Hello World
-// Matt Mahan 3/27/13
+// Matt Maha 3/27/13
 
 #include "SDL/SDL.h"
 
