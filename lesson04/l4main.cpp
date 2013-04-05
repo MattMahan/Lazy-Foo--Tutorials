@@ -53,10 +53,66 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination){
 
 bool init(){
 	// Initialize all SDL subsystems
-	if(SDL_INIT(SDL_INIT_EVERYTHING) == -1) return false;
+	if(SDL_Init(SDL_INIT_EVERYTHING) == -1) return false;
 	
 	// set up the screen
-	screen = SDK_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE);
+	
+	// If there was an error in setting up the screen
+	if (screen == NULL) return false;
+	
+	// Set the window caption
+	SDL_WM_SetCaption("Event test", NULL);
+	
+	// If everythign initialized fine
+	return true;
+}
+
+bool load_files(){
+
+	// Load the image
+	image = load_image("x.png");
+	
+	// If there was an error in loading the image
+	if(image==NULL) return false;
+	
+	// If everything loaded fine
+	return true;
+}
+
+void clean_up(){
+	// Free the image
+	SDL_FreeSurface(image);
+	
+	// Quit SDL
+	SDL_Quit();
+}
+
+int main(int argc, char* args[]){
+	// Make sure the program waits for a quit
+	bool quit=false;
+	
+	// Initialize
+	if(init()==false) return 1;
+	
+	// Load the files
+	if(load_files()==false) return 1;
+	
+	// Apply the surface to the screen
+	apply_surface(0,0,image,screen);
+	
+	// Update the screen
+	if(SDL_Flip(screen)==-1) return 1;
+	
+	while(SDL_PollEvent(&event)){
+		// If the user has Xed out the window
+		if(event.type==SDL_QUIT) quit = true;
+	}
+	
+	// Free the surface and quit SDL
+	clean_up();
+	return 0;
+}
 	
 	
 	
